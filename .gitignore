@@ -1,0 +1,5 @@
+/ssh-session-notifier
+
+# Editor/IDE
+.idea/
+.vscode/
