@@ -20,5 +20,8 @@ jobs:
         with:
           go-version-file: go.mod
 
+      - name: Run code vetting
+        run: go vet ./...
+
       - name: Run tests
         run: go test ./...
