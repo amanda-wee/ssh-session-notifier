@@ -1,5 +1,6 @@
 ssh-session-notifier
 ====================
+[![Tests](https://github.com/amanda-wee/ssh-session-notifier/actions/workflows/test.yml/badge.svg)](https://github.com/amanda-wee/ssh-session-notifier/actions/workflows/test.yml)
 
 Receive notifications when SSH sessions open or close so you can act on an unexpected login.
 
