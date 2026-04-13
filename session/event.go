@@ -46,6 +46,7 @@ func NewEventFromQueue(ctx context.Context, db *sql.DB) (*Event, error) {
 	var event Event
 
 	for {
+		// find the unlocked record with the oldest session datetime:
 		err := db.QueryRowContext(
 			ctx,
 			`SELECT id, event_type, user, remote_host, session_datetime
@@ -59,6 +60,7 @@ func NewEventFromQueue(ctx context.Context, db *sql.DB) (*Event, error) {
 			return nil, err
 		}
 
+		// attempt to lock the record:
 		result, err := db.ExecContext(
 			ctx,
 			`UPDATE session_events SET locked_at = datetime('now')
@@ -75,7 +77,7 @@ func NewEventFromQueue(ctx context.Context, db *sql.DB) (*Event, error) {
 			return nil, err
 		}
 		if n > 0 {
-			break
+			break // record locked
 		}
 	}
 
