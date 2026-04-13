@@ -9,7 +9,7 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
-const defaultConfigFilePath = "/usr/local/etc/ssh-session-notifier/config.toml"
+const defaultConfigFilePath = "/etc/ssh-session-notifier/config.toml"
 
 type Config struct {
 	General      GeneralConfig      `toml:"general"`
