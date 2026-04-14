@@ -16,12 +16,14 @@ func NewHandle(dataSourceName string) (*sql.DB, error) {
 
 var databaseMigrations = []string{
 	`CREATE TABLE IF NOT EXISTS session_events (
-	    id INTEGER PRIMARY KEY,
-	    event_type TEXT NOT NULL,
-	    user TEXT NOT NULL,
-	    remote_host TEXT NOT NULL,
+	    id               INTEGER PRIMARY KEY,
+	    event_type       TEXT NOT NULL,
+	    user             TEXT NOT NULL,
+	    remote_host      TEXT NOT NULL,
+		terminal         TEXT NOT NULL,
+		service          TEXT NOT NULL,
 	    session_datetime DATETIME NOT NULL,
-	    locked_at DATETIME
+	    locked_at        DATETIME
 	);`,
 }
 

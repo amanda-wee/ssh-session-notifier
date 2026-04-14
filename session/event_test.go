@@ -54,6 +54,8 @@ func TestNewEventFromEnv(t *testing.T) {
 		pamType      string
 		pamUser      string
 		pamRhost     string
+		pamTerminal  string
+		pamService   string
 		allowlist    []string
 		wantNil      bool
 		wantType     string
@@ -66,6 +68,8 @@ func TestNewEventFromEnv(t *testing.T) {
 			pamType:      "open_session",
 			pamUser:      "amanda",
 			pamRhost:     "192.168.1.50",
+			pamTerminal:  "/dev/pts/0",
+			pamService:   "sshd",
 			allowlist:    []string{},
 			wantType:     "open_session",
 			wantUser:     "amanda",
@@ -77,6 +81,8 @@ func TestNewEventFromEnv(t *testing.T) {
 			pamType:      "close_session",
 			pamUser:      "amanda",
 			pamRhost:     "192.168.1.50",
+			pamTerminal:  "/dev/pts/0",
+			pamService:   "sshd",
 			allowlist:    []string{},
 			wantType:     "close_session",
 			wantUser:     "amanda",
@@ -84,26 +90,32 @@ func TestNewEventFromEnv(t *testing.T) {
 			wantLocation: auckland,
 		},
 		{
-			name:      "unrecognised PAM_TYPE returns nil",
-			pamType:   "other_event",
-			pamUser:   "amanda",
-			pamRhost:  "192.168.1.50",
-			allowlist: []string{},
-			wantNil:   true,
+			name:        "unrecognised PAM_TYPE returns nil",
+			pamType:     "other_event",
+			pamUser:     "amanda",
+			pamRhost:    "192.168.1.50",
+			pamTerminal: "/dev/pts/0",
+			pamService:  "sshd",
+			allowlist:   []string{},
+			wantNil:     true,
 		},
 		{
-			name:      "PAM_RHOST in allowlist returns nil",
-			pamType:   "open_session",
-			pamUser:   "amanda",
-			pamRhost:  "192.168.1.1",
-			allowlist: []string{"192.168.1.1", "192.168.1.2"},
-			wantNil:   true,
+			name:        "PAM_RHOST in allowlist returns nil",
+			pamType:     "open_session",
+			pamUser:     "amanda",
+			pamRhost:    "192.168.1.1",
+			pamTerminal: "/dev/pts/0",
+			pamService:  "sshd",
+			allowlist:   []string{"192.168.1.1", "192.168.1.2"},
+			wantNil:     true,
 		},
 		{
 			name:         "PAM_RHOST not in allowlist is included in event",
 			pamType:      "open_session",
 			pamUser:      "amanda",
 			pamRhost:     "192.168.1.50",
+			pamTerminal:  "/dev/pts/0",
+			pamService:   "sshd",
 			allowlist:    []string{"192.168.1.1", "192.168.1.2"},
 			wantType:     "open_session",
 			wantUser:     "amanda",
@@ -117,6 +129,8 @@ func TestNewEventFromEnv(t *testing.T) {
 			t.Setenv("PAM_TYPE", tt.pamType)
 			t.Setenv("PAM_USER", tt.pamUser)
 			t.Setenv("PAM_RHOST", tt.pamRhost)
+			t.Setenv("PAM_TERMINAL", "/dev/pts/0")
+			t.Setenv("PAM_SERVICE", "sshd")
 
 			before := time.Now().In(auckland)
 			event := session.NewEventFromEnv(auckland, tt.allowlist)
@@ -176,7 +190,8 @@ func TestNewEventFromQueue(t *testing.T) {
 
 		e := &session.Event{
 			Type: "open_session", User: "amanda",
-			RemoteHost: "192.168.1.50", SessionDatetime: fixedTime,
+			RemoteHost: "192.168.1.50", Terminal: "/dev/pts/0",
+			Service: "sshd", SessionDatetime: fixedTime,
 		}
 		id := insertEvent(t, db, e)
 		_, err := db.ExecContext(ctx,
@@ -200,7 +215,8 @@ func TestNewEventFromQueue(t *testing.T) {
 
 		e := &session.Event{
 			Type: "open_session", User: "amanda",
-			RemoteHost: "192.168.1.50", SessionDatetime: fixedTime,
+			RemoteHost: "192.168.1.50", Terminal: "/dev/pts/0",
+			Service: "sshd", SessionDatetime: fixedTime,
 		}
 		id := insertEvent(t, db, e)
 
@@ -235,7 +251,8 @@ func TestNewEventFromQueue(t *testing.T) {
 
 		e := &session.Event{
 			Type: "open_session", User: "amanda",
-			RemoteHost: "192.168.1.50", SessionDatetime: fixedTime,
+			RemoteHost: "192.168.1.50", Terminal: "/dev/pts/0",
+			Service: "sshd", SessionDatetime: fixedTime,
 		}
 		id := insertEvent(t, db, e)
 
@@ -265,11 +282,13 @@ func TestNewEventFromQueue(t *testing.T) {
 
 		older := &session.Event{
 			Type: "open_session", User: "amanda",
-			RemoteHost: "192.168.1.50", SessionDatetime: olderTime,
+			RemoteHost: "192.168.1.50", Terminal: "/dev/pts/0",
+			Service: "sshd", SessionDatetime: olderTime,
 		}
 		newer := &session.Event{
 			Type: "close_session", User: "amanda",
-			RemoteHost: "192.168.1.50", SessionDatetime: fixedTime,
+			RemoteHost: "192.168.1.50", Terminal: "/dev/pts/0",
+			Service: "sshd", SessionDatetime: fixedTime,
 		}
 		olderId := insertEvent(t, db, older)
 		insertEvent(t, db, newer)
@@ -292,11 +311,13 @@ func TestNewEventFromQueue(t *testing.T) {
 
 		locked := &session.Event{
 			Type: "open_session", User: "amanda",
-			RemoteHost: "192.168.1.50", SessionDatetime: olderTime,
+			RemoteHost: "192.168.1.50", Terminal: "/dev/pts/0",
+			Service: "sshd", SessionDatetime: olderTime,
 		}
 		unlocked := &session.Event{
 			Type: "close_session", User: "amanda",
-			RemoteHost: "192.168.1.50", SessionDatetime: fixedTime,
+			RemoteHost: "192.168.1.50", Terminal: "/dev/pts/0",
+			Service: "sshd", SessionDatetime: fixedTime,
 		}
 		lockedId := insertEvent(t, db, locked)
 		unlockedId := insertEvent(t, db, unlocked)
@@ -333,6 +354,8 @@ func TestEvent_Enqueue(t *testing.T) {
 				Type:            "open_session",
 				User:            "amanda",
 				RemoteHost:      "192.168.1.50",
+				Terminal:        "/dev/pts/0",
+				Service:         "sshd",
 				SessionDatetime: fixedTime,
 			},
 		},
@@ -342,6 +365,8 @@ func TestEvent_Enqueue(t *testing.T) {
 				Type:            "close_session",
 				User:            "amanda",
 				RemoteHost:      "192.168.1.50",
+				Terminal:        "/dev/pts/0",
+				Service:         "sshd",
 				SessionDatetime: fixedTime,
 			},
 		},
@@ -360,9 +385,9 @@ func TestEvent_Enqueue(t *testing.T) {
 			var got session.Event
 			err = db.QueryRowContext(
 				ctx,
-				`SELECT id, event_type, user, remote_host, session_datetime
+				`SELECT id, event_type, user, remote_host, terminal, service, session_datetime
 				FROM session_events LIMIT 1;`,
-			).Scan(&got.ID, &got.Type, &got.User, &got.RemoteHost, &got.SessionDatetime)
+			).Scan(&got.ID, &got.Type, &got.User, &got.RemoteHost, &got.Terminal, &got.Service, &got.SessionDatetime)
 			if err != nil {
 				t.Fatalf("could not retrieve inserted event: %v", err)
 			}
@@ -375,6 +400,12 @@ func TestEvent_Enqueue(t *testing.T) {
 			}
 			if got.RemoteHost != tt.event.RemoteHost {
 				t.Errorf("remote_host: got %q, want %q", got.RemoteHost, tt.event.RemoteHost)
+			}
+			if got.Terminal != tt.event.Terminal {
+				t.Errorf("terminal: got %q, want %q", got.Terminal, tt.event.Terminal)
+			}
+			if got.Service != tt.event.Service {
+				t.Errorf("service: got %q, want %q", got.Service, tt.event.Service)
 			}
 			if !got.SessionDatetime.Equal(tt.event.SessionDatetime) {
 				t.Errorf("session_datetime: got %v, want %v", got.SessionDatetime, tt.event.SessionDatetime)
@@ -420,11 +451,13 @@ func TestEvent_DeleteRecord(t *testing.T) {
 
 		event1 := &session.Event{
 			Type: "open_session", User: "amanda",
-			RemoteHost: "192.168.1.50", SessionDatetime: fixedTime,
+			RemoteHost: "192.168.1.50", Terminal: "/dev/pts/0",
+			Service: "sshd", SessionDatetime: fixedTime,
 		}
 		event2 := &session.Event{
 			Type: "close_session", User: "amanda",
-			RemoteHost: "192.168.1.50", SessionDatetime: fixedTime,
+			RemoteHost: "192.168.1.50", Terminal: "/dev/pts/0",
+			Service: "sshd", SessionDatetime: fixedTime,
 		}
 		id1 := insertEvent(t, db, event1)
 		id2 := insertEvent(t, db, event2)
@@ -457,7 +490,8 @@ func TestEvent_ReleaseLock(t *testing.T) {
 
 		event := &session.Event{
 			Type: "open_session", User: "amanda",
-			RemoteHost: "192.168.1.50", SessionDatetime: fixedTime,
+			RemoteHost: "192.168.1.50", Terminal: "/dev/pts/0",
+			Service: "sshd", SessionDatetime: fixedTime,
 		}
 		id := insertEvent(t, db, event)
 		event.ID = id
@@ -493,11 +527,13 @@ func TestEvent_ReleaseLock(t *testing.T) {
 
 		event1 := &session.Event{
 			Type: "open_session", User: "amanda",
-			RemoteHost: "192.168.1.50", SessionDatetime: fixedTime,
+			RemoteHost: "192.168.1.50", Terminal: "/dev/pts/0",
+			Service: "sshd", SessionDatetime: fixedTime,
 		}
 		event2 := &session.Event{
 			Type: "close_session", User: "amanda",
-			RemoteHost: "192.168.1.50", SessionDatetime: fixedTime,
+			RemoteHost: "192.168.1.50", Terminal: "/dev/pts/0",
+			Service: "sshd", SessionDatetime: fixedTime,
 		}
 		id1 := insertEvent(t, db, event1)
 		id2 := insertEvent(t, db, event2)

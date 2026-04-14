@@ -15,6 +15,8 @@ type Event struct {
 	Type            string
 	User            string
 	RemoteHost      string
+	Terminal        string
+	Service         string
 	SessionDatetime time.Time
 }
 
@@ -30,12 +32,12 @@ func NewEventFromEnv(location *time.Location, allowlistIPs []string) *Event {
 		return nil
 	}
 
-	user := os.Getenv("PAM_USER")
-
 	return &Event{
 		Type:            eventType,
-		User:            user,
+		User:            os.Getenv("PAM_USER"),
 		RemoteHost:      remoteHost,
+		Terminal:        os.Getenv("PAM_TTY"),
+		Service:         os.Getenv("PAM_SERVICE"),
 		SessionDatetime: time.Now().In(location),
 	}
 }
@@ -49,10 +51,18 @@ func NewEventFromQueue(ctx context.Context, db *sql.DB) (*Event, error) {
 		// find the unlocked record with the oldest session datetime:
 		err := db.QueryRowContext(
 			ctx,
-			`SELECT id, event_type, user, remote_host, session_datetime
+			`SELECT id, event_type, user, remote_host, terminal, service, session_datetime
 		    FROM session_events WHERE locked_at IS NULL
 		    ORDER BY session_datetime ASC LIMIT 1;`,
-		).Scan(&event.ID, &event.Type, &event.User, &event.RemoteHost, &event.SessionDatetime)
+		).Scan(
+			&event.ID,
+			&event.Type,
+			&event.User,
+			&event.RemoteHost,
+			&event.Terminal,
+			&event.Service,
+			&event.SessionDatetime,
+		)
 		if err != nil {
 			if errors.Is(err, sql.ErrNoRows) {
 				return nil, nil // queue is empty or only contains locked session events
@@ -89,9 +99,14 @@ func (event *Event) Enqueue(ctx context.Context, db *sql.DB) error {
 	_, err := db.ExecContext(
 		ctx,
 		`INSERT INTO session_events
-		    (event_type, user, remote_host, session_datetime)
-		    VALUES (?, ?, ?, ?);`,
-		event.Type, event.User, event.RemoteHost, event.SessionDatetime,
+		    (event_type, user, remote_host, terminal, service, session_datetime)
+		    VALUES (?, ?, ?, ?, ?, ?);`,
+		event.Type,
+		event.User,
+		event.RemoteHost,
+		event.Terminal,
+		event.Service,
+		event.SessionDatetime,
 	)
 	return err
 }

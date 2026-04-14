@@ -37,12 +37,12 @@ func TestRateLimitError_Error(t *testing.T) {
 	}
 }
 
-var eventColumns = []string{"id", "event_type", "user", "remote_host", "session_datetime"}
+var eventColumns = []string{"id", "event_type", "user", "remote_host", "terminal", "service", "session_datetime"}
 
 func expectDequeue(mock sqlmock.Sqlmock, id int, eventType string) {
-	mock.ExpectQuery(`SELECT id, event_type, user, remote_host, session_datetime`).
+	mock.ExpectQuery(`SELECT id, event_type, user, remote_host, terminal, service, session_datetime`).
 		WillReturnRows(sqlmock.NewRows(eventColumns).AddRow(
-			id, eventType, "amanda", "192.168.1.50",
+			id, eventType, "amanda", "192.168.1.50", "/dev/pts/0", "sshd",
 			time.Date(2024, 6, 15, 9, 30, 0, 0, time.UTC),
 		))
 	mock.ExpectExec(`UPDATE session_events SET locked_at = datetime\('now'\)`).
@@ -51,7 +51,7 @@ func expectDequeue(mock sqlmock.Sqlmock, id int, eventType string) {
 }
 
 func expectEmptyQueue(mock sqlmock.Sqlmock) {
-	mock.ExpectQuery(`SELECT id, event_type, user, remote_host, session_datetime`).
+	mock.ExpectQuery(`SELECT id, event_type, user, remote_host, terminal, service, session_datetime`).
 		WillReturnRows(sqlmock.NewRows(eventColumns))
 }
 
@@ -109,7 +109,7 @@ func TestSendAll(t *testing.T) {
 			name:     "NewEventFromQueue error is returned",
 			notifier: &mockNotifier{responses: []error{}},
 			setupDB: func(mock sqlmock.Sqlmock) {
-				mock.ExpectQuery(`SELECT id, event_type, user, remote_host, session_datetime`).
+				mock.ExpectQuery(`SELECT id, event_type, user, remote_host, terminal, service, session_datetime`).
 					WillReturnError(queryErr)
 			},
 			wantErr:       true,
@@ -172,6 +172,8 @@ func TestSend(t *testing.T) {
 		Type:            "open_session",
 		User:            "amanda",
 		RemoteHost:      "192.168.1.50",
+		Terminal:        "/dev/pts/0",
+		Service:         "sshd",
 		SessionDatetime: time.Date(2024, 6, 15, 9, 30, 0, 0, time.UTC),
 	}
 
