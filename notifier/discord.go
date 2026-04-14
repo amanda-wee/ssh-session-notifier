@@ -74,14 +74,18 @@ func (discord *discordNotifier) Notify(ctx context.Context, event *session.Event
 // Format the session event as a Discord webhook request payload.
 func (discord *discordNotifier) formatPayload(event *session.Event) ([]byte, error) {
 	user := strings.ReplaceAll(event.User, "`", "")
-	if user == "" {
-		user = "unknown user"
-	}
 
 	remoteHost := strings.ReplaceAll(event.RemoteHost, "`", "")
-	if remoteHost == "" {
-		remoteHost = "unknown remote host"
+	if remoteHost != "" {
+		remoteHost = fmt.Sprintf(" (%s)", remoteHost)
 	}
+
+	terminal := event.Terminal
+	if terminal != "" {
+		terminal = fmt.Sprintf("via %s ", terminal)
+	}
+
+	service := fmt.Sprintf("(%s)", event.Service)
 
 	var payload struct {
 		Username string `json:"username"`
@@ -94,13 +98,13 @@ func (discord *discordNotifier) formatPayload(event *session.Event) ([]byte, err
 	switch event.Type {
 	case "open_session":
 		payload.Content = fmt.Sprintf(
-			"```- '%s' logged in to %s from %s at %s```",
-			user, discord.hostname, remoteHost, eventDateTime,
+			"```- '%s'%s logged in to %s %s%s at %s```",
+			user, remoteHost, discord.hostname, terminal, service, eventDateTime,
 		)
 	case "close_session":
 		payload.Content = fmt.Sprintf(
-			"```- '%s' logged out of %s back to %s at %s```",
-			user, discord.hostname, remoteHost, eventDateTime,
+			"```- '%s'%s logged out from %s %s%s at %s```",
+			user, remoteHost, discord.hostname, terminal, service, eventDateTime,
 		)
 	default:
 		return nil, fmt.Errorf("unrecognised event type: %s", event.Type)
