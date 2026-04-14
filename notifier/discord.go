@@ -80,20 +80,20 @@ func (discord *discordNotifier) formatPayload(event *session.Event) ([]byte, err
 		remoteHost = fmt.Sprintf(" (%s)", remoteHost)
 	}
 
-	terminal := event.Terminal
+	terminal := strings.ReplaceAll(event.Terminal, "`", "")
 	if terminal != "" {
 		terminal = fmt.Sprintf("via %s ", terminal)
 	}
 
 	service := fmt.Sprintf("(%s)", event.Service)
 
+	eventDateTime := event.SessionDatetime.Format("2006-01-02 15:04:05.000000-07:00")
+
 	var payload struct {
 		Username string `json:"username"`
 		Content  string `json:"content"`
 	}
 	payload.Username = discord.hostname
-
-	eventDateTime := event.SessionDatetime.Format("2006-01-02 15:04:05.000000-07:00")
 
 	switch event.Type {
 	case "open_session":

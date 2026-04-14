@@ -202,12 +202,12 @@ func TestDiscordNotifier_FormatPayload(t *testing.T) {
 			wantContent: "```- 'amanda' (192.168.1.50) logged out from myserver via /dev/pts/0 (sshd) at 2024-06-15 09:30:00.000000+00:00```",
 		},
 		{
-			name: "backticks stripped from user and remoteHost",
+			name: "backticks stripped from user, remoteHost, and terminal",
 			event: &session.Event{
 				Type:            "open_session",
 				User:            "bad`user",
 				RemoteHost:      "evil`host",
-				Terminal:        "/dev/pts/0",
+				Terminal:        "/dev/pts/`0",
 				Service:         "sshd",
 				SessionDatetime: fixedTime,
 			},
