@@ -20,8 +20,31 @@ Installation
 
 First, download the `ssh-session-notifier` binary and run the sample `install.sh` with root privileges (or you can use it as a guide for an Ansible playbook).
 
+Then, edit the configuration file `/etc/ssh-session-notifier/config.toml`. Refer to the configuration section for an example.
+
 Next, install the PAM hook by editing `/etc/pam.d/sshd` to append:
 
     session    optional     pam_exec.so /usr/sbin/ssh-session-notifier queue
 
 Then configure a scheduler (cron, systemd timer, etc.) to periodically run `/usr/sbin/ssh-session-notifier send` as frequently as you like (say, every minute). Done!
+
+Configuration
+-------------
+Here is what `config.toml` might look like:
+
+    [general]
+    timezone = "Pacific/Auckland"
+    hostname = "example.com"
+
+    [notification]
+    service = "discord"
+    webhook_url = "https://discord.com/api/webhooks/xyz"
+
+    [allowlist]
+    ips = ["10.0.0.2", "10.0.0.3"]
+
+The hostname is for identifying the source of the notification, so use the server's own hostname or a recognisable label.
+
+Presently, only Discord is supported for the notification service.
+
+IP addresses listed in `allowlist` are allowed to log in without triggering notifications. CIDR notation is not supported yet.
