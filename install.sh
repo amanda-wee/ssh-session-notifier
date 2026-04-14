@@ -23,6 +23,6 @@ chmod 750 /var/lib/ssh-session-notifier
 chmod 660 /var/lib/ssh-session-notifier/session_events.db
 
 # Install binary
-cp ./ssh-session-notifier /usr/local/sbin/
-chown root:root /usr/local/sbin/ssh-session-notifier
-chmod 755 /usr/local/sbin/ssh-session-notifier
+cp ./ssh-session-notifier /usr/sbin/
+chown root:root /usr/sbin/ssh-session-notifier
+chmod 755 /usr/sbin/ssh-session-notifier
