@@ -63,7 +63,7 @@ func (discord *discordNotifier) Notify(ctx context.Context, event *session.Event
 	var rateLimitRespBody struct {
 		RetryAfter float64 `json:"retry_after"`
 	}
-	if err := json.NewDecoder(resp.Body).Decode(&rateLimitRespBody); err != nil {
+	if err = json.NewDecoder(resp.Body).Decode(&rateLimitRespBody); err != nil {
 		return err
 	}
 	return RateLimitError{
