@@ -14,17 +14,21 @@ func NewHandle(dataSourceName string) (*sql.DB, error) {
 	return sql.Open("sqlite3", dataSourceName)
 }
 
-var databaseMigrations = []string{
-	`CREATE TABLE IF NOT EXISTS session_events (
-	    id               INTEGER PRIMARY KEY,
-	    event_type       TEXT NOT NULL,
-	    user             TEXT NOT NULL,
-	    remote_host      TEXT NOT NULL,
-		terminal         TEXT NOT NULL,
-		service          TEXT NOT NULL,
-	    session_datetime DATETIME NOT NULL,
-	    locked_at        DATETIME
-	);`,
+var databaseMigrations = [][]string{
+	{
+		`CREATE TABLE IF NOT EXISTS session_events (
+			id               INTEGER PRIMARY KEY,
+			event_type       TEXT NOT NULL,
+			user             TEXT NOT NULL,
+			remote_host      TEXT NOT NULL,
+			terminal         TEXT NOT NULL,
+			service          TEXT NOT NULL,
+			session_datetime DATETIME NOT NULL,
+			locked_at        DATETIME
+		);`,
+		`CREATE INDEX IF NOT EXISTS idx_session_events_session_datetime
+		ON session_events (session_datetime);`,
+	},
 }
 
 func Init(ctx context.Context, db *sql.DB) error {
@@ -70,9 +74,11 @@ func migrateDatabase(ctx context.Context, db *sql.DB, version int) error {
 	defer tx.Rollback()
 
 	for _, migration := range databaseMigrations[version:] {
-		_, err = tx.ExecContext(ctx, migration)
-		if err != nil {
-			return err
+		for _, query := range migration {
+			_, err = tx.ExecContext(ctx, query)
+			if err != nil {
+				return err
+			}
 		}
 	}
 	_, err = tx.ExecContext(
