@@ -20,9 +20,9 @@ func TestNewConfigFromFile(t *testing.T) {
 		{
 			name: "full valid config",
 			content: `
-[general]
+[host]
 timezone = "Pacific/Auckland"
-hostname = "test-server"
+name = "test-server"
 
 [notification]
 service = "discord"
@@ -32,11 +32,11 @@ webhook_url = "https://discord.com/api/webhooks/xyz"
 ips = ["192.168.1.1", "10.0.0.1"]
 `,
 			validate: func(t *testing.T, cfg *Config) {
-				if cfg.General.Timezone != "Pacific/Auckland" {
-					t.Errorf("Timezone: got %q, want %q", cfg.General.Timezone, "Pacific/Auckland")
+				if cfg.Host.Timezone != "Pacific/Auckland" {
+					t.Errorf("Timezone: got %q, want %q", cfg.Host.Timezone, "Pacific/Auckland")
 				}
-				if cfg.General.Hostname != "test-server" {
-					t.Errorf("Hostname: got %q, want %q", cfg.General.Hostname, "test-server")
+				if cfg.Host.Name != "test-server" {
+					t.Errorf("Hostname: got %q, want %q", cfg.Host.Name, "test-server")
 				}
 				if cfg.Notification.Service != "discord" {
 					t.Errorf("Service: got %q, want %q", cfg.Notification.Service, "discord")
@@ -53,24 +53,24 @@ ips = ["192.168.1.1", "10.0.0.1"]
 		{
 			name: "timezone defaults to Etc/UTC when omitted",
 			content: `
-[general]
-hostname = "test-server"
+[host]
+name = "test-server"
 
 [notification]
 service = "discord"
 webhook_url = "https://discord.com/api/webhooks/xyz"
 `,
 			validate: func(t *testing.T, cfg *Config) {
-				if cfg.General.Timezone != "Etc/UTC" {
-					t.Errorf("Timezone: got %q, want %q", cfg.General.Timezone, "Etc/UTC")
+				if cfg.Host.Timezone != "Etc/UTC" {
+					t.Errorf("Timezone: got %q, want %q", cfg.Host.Timezone, "Etc/UTC")
 				}
 			},
 		},
 		{
 			name: "unsupported notification service returns error",
 			content: `
-[general]
-hostname = "test-server"
+[host]
+name = "test-server"
 
 [notification]
 service = "slack"

@@ -32,9 +32,9 @@ Configuration
 -------------
 Here is what `config.toml` might look like:
 
-    [general]
+    [host]
     timezone = "Pacific/Auckland"
-    hostname = "example.com"
+    name = "example.com"
 
     [notification]
     service = "discord"

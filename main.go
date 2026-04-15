@@ -85,7 +85,7 @@ func printHelpText() {
 }
 
 func queue(ctx context.Context, cfg *Config, db *sql.DB) error {
-	loc, err := time.LoadLocation(cfg.General.Timezone)
+	loc, err := time.LoadLocation(cfg.Host.Timezone)
 	if err != nil {
 		return err
 	}
@@ -108,7 +108,7 @@ func send(ctx context.Context, cfg *Config, db *sql.DB) error {
 	switch cfg.Notification.Service {
 	case "discord":
 		notificationService = notifier.NewDiscordNotifier(
-			client, cfg.General.Hostname, cfg.Notification.WebhookURL,
+			client, cfg.Host.Name, cfg.Notification.WebhookURL,
 		)
 	default:
 		return fmt.Errorf("unsupported notification service: %s", cfg.Notification.Service)

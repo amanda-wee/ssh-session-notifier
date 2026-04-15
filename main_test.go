@@ -27,9 +27,9 @@ func newTestDB(t *testing.T) *sql.DB {
 
 func TestQueue(t *testing.T) {
 	validConfig := &Config{
-		General: GeneralConfig{
+		Host: HostConfig{
 			Timezone: "Pacific/Auckland",
-			Hostname: "test-server",
+			Name:     "test-server",
 		},
 		Allowlist: AllowlistConfig{
 			IPs: []string{"192.168.1.1"},
@@ -73,9 +73,9 @@ func TestQueue(t *testing.T) {
 		{
 			name: "invalid timezone returns error",
 			cfg: &Config{
-				General: GeneralConfig{
+				Host: HostConfig{
 					Timezone: "Not/ATimezone",
-					Hostname: "test-server",
+					Name:     "test-server",
 				},
 			},
 			pamType:       "open_session",
@@ -135,8 +135,8 @@ func TestSend(t *testing.T) {
 		{
 			name: "unsupported notification service returns error",
 			cfg: &Config{
-				General: GeneralConfig{
-					Hostname: "test-server",
+				Host: HostConfig{
+					Name: "test-server",
 				},
 				Notification: NotificationConfig{
 					Service:    "example",
@@ -149,8 +149,8 @@ func TestSend(t *testing.T) {
 		{
 			name: "discord with empty queue returns nil",
 			cfg: &Config{
-				General: GeneralConfig{
-					Hostname: "test-server",
+				Host: HostConfig{
+					Name: "test-server",
 				},
 				Notification: NotificationConfig{
 					Service:    "discord",

@@ -12,14 +12,14 @@ import (
 const defaultConfigFilePath = "/etc/ssh-session-notifier/config.toml"
 
 type Config struct {
-	General      GeneralConfig      `toml:"general"`
+	Host         HostConfig         `toml:"host"`
 	Notification NotificationConfig `toml:"notification"`
 	Allowlist    AllowlistConfig    `toml:"allowlist"`
 }
 
-type GeneralConfig struct {
+type HostConfig struct {
 	Timezone string `toml:"timezone"`
-	Hostname string `toml:"hostname"`
+	Name     string `toml:"name"`
 }
 
 type NotificationConfig struct {
@@ -43,8 +43,8 @@ func newConfigFromFile(configFilePath string) (*Config, error) {
 		return nil, err
 	}
 
-	if cfg.General.Timezone == "" {
-		cfg.General.Timezone = "Etc/UTC"
+	if cfg.Host.Timezone == "" {
+		cfg.Host.Timezone = "Etc/UTC"
 	}
 
 	if !slices.Contains([]string{"discord"}, cfg.Notification.Service) {
