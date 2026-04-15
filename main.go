@@ -110,6 +110,10 @@ func send(ctx context.Context, cfg *Config, db *sql.DB) error {
 		notificationService = notifier.NewDiscordNotifier(
 			client, cfg.Host.Name, cfg.Notification.WebhookURL,
 		)
+	case "ntfy":
+		notificationService = notifier.NewNtfyNotifier(
+			client, cfg.Host.Name, cfg.Notification.WebhookURL,
+		)
 	default:
 		return fmt.Errorf("unsupported notification service: %s", cfg.Notification.Service)
 	}

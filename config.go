@@ -47,7 +47,7 @@ func newConfigFromFile(configFilePath string) (*Config, error) {
 		cfg.Host.Timezone = "Etc/UTC"
 	}
 
-	if !slices.Contains([]string{"discord"}, cfg.Notification.Service) {
+	if !slices.Contains([]string{"discord", "ntfy"}, cfg.Notification.Service) {
 		return nil, fmt.Errorf("unsupported notification service: %s", cfg.Notification.Service)
 	}
 

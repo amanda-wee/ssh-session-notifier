@@ -159,6 +159,19 @@ func TestSend(t *testing.T) {
 			},
 			needsDB: true,
 		},
+		{
+			name: "ntfy with empty queue returns nil",
+			cfg: &Config{
+				Host: HostConfig{
+					Name: "test-server",
+				},
+				Notification: NotificationConfig{
+					Service:    "ntfy",
+					WebhookURL: "https://ntfy.sh/mytopic",
+				},
+			},
+			needsDB: true,
+		},
 	}
 
 	for _, tt := range tests {
