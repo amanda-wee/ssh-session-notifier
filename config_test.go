@@ -26,6 +26,8 @@ name = "test-server"
 
 [notification]
 service = "discord"
+
+[notification.discord]
 webhook_url = "https://discord.com/api/webhooks/xyz"
 
 [allowlist]
@@ -41,8 +43,8 @@ ips = ["192.168.1.1", "10.0.0.1"]
 				if cfg.Notification.Service != "discord" {
 					t.Errorf("Service: got %q, want %q", cfg.Notification.Service, "discord")
 				}
-				if cfg.Notification.WebhookURL != "https://discord.com/api/webhooks/xyz" {
-					t.Errorf("WebhookURL: got %q, want %q", cfg.Notification.WebhookURL, "https://discord.com/api/webhooks/xyz")
+				if cfg.Notification.Discord.WebhookURL != "https://discord.com/api/webhooks/xyz" {
+					t.Errorf("WebhookURL: got %q, want %q", cfg.Notification.Discord.WebhookURL, "https://discord.com/api/webhooks/xyz")
 				}
 				wantIPs := []string{"192.168.1.1", "10.0.0.1"}
 				if !slices.Equal(cfg.Allowlist.IPs, wantIPs) {

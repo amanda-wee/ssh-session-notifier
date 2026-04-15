@@ -23,8 +23,17 @@ type HostConfig struct {
 }
 
 type NotificationConfig struct {
-	Service    string `toml:"service"`
+	Service string        `toml:"service"`
+	Discord DiscordConfig `toml:"discord"`
+	Ntfy    NtfyConfig    `toml:"ntfy"`
+}
+
+type DiscordConfig struct {
 	WebhookURL string `toml:"webhook_url"`
+}
+
+type NtfyConfig struct {
+	Topic string `toml:"topic"`
 }
 
 type AllowlistConfig struct {

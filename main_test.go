@@ -139,8 +139,7 @@ func TestSend(t *testing.T) {
 					Name: "test-server",
 				},
 				Notification: NotificationConfig{
-					Service:    "example",
-					WebhookURL: "https://hooks.example.com/xyz",
+					Service: "example",
 				},
 			},
 			wantErr:       true,
@@ -153,8 +152,10 @@ func TestSend(t *testing.T) {
 					Name: "test-server",
 				},
 				Notification: NotificationConfig{
-					Service:    "discord",
-					WebhookURL: "https://discord.com/api/webhooks/xyz",
+					Service: "discord",
+					Discord: DiscordConfig{
+						WebhookURL: "https://discord.com/api/webhooks/xyz",
+					},
 				},
 			},
 			needsDB: true,
@@ -166,8 +167,10 @@ func TestSend(t *testing.T) {
 					Name: "test-server",
 				},
 				Notification: NotificationConfig{
-					Service:    "ntfy",
-					WebhookURL: "https://ntfy.sh/mytopic",
+					Service: "ntfy",
+					Ntfy: NtfyConfig{
+						Topic: "https://ntfy.sh/mytopic",
+					},
 				},
 			},
 			needsDB: true,

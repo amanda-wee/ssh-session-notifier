@@ -38,6 +38,8 @@ Here is what `config.toml` might look like:
 
     [notification]
     service = "discord"
+
+    [notification.discord]
     webhook_url = "https://discord.com/api/webhooks/xyz"
 
     [allowlist]
