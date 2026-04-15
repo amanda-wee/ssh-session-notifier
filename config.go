@@ -33,7 +33,7 @@ type DiscordConfig struct {
 }
 
 type NtfyConfig struct {
-	Topic string `toml:"topic"`
+	TopicURL string `toml:"topic_url"`
 }
 
 type AllowlistConfig struct {

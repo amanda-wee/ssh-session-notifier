@@ -169,7 +169,7 @@ func TestSend(t *testing.T) {
 				Notification: NotificationConfig{
 					Service: "ntfy",
 					Ntfy: NtfyConfig{
-						Topic: "https://ntfy.sh/mytopic",
+						TopicURL: "https://ntfy.sh/mytopic",
 					},
 				},
 			},

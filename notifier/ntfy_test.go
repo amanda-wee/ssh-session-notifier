@@ -23,8 +23,8 @@ func TestNewNtfyNotifier(t *testing.T) {
 	if ntfy.httpClient != client {
 		t.Error("httpClient: got different client than provided")
 	}
-	if ntfy.topic != "https://ntfy.sh/mytopic" {
-		t.Errorf("topic: got %q, want %q", ntfy.topic, "https://ntfy.sh/mytopic")
+	if ntfy.topicURL != "https://ntfy.sh/mytopic" {
+		t.Errorf("topic: got %q, want %q", ntfy.topicURL, "https://ntfy.sh/mytopic")
 	}
 }
 
@@ -118,7 +118,7 @@ func TestNtfyNotifier_Notify(t *testing.T) {
 
 			notifier := &ntfyNotifier{
 				hostname:   "myserver",
-				topic:      server.URL,
+				topicURL:   server.URL,
 				httpClient: server.Client(),
 			}
 

@@ -14,15 +14,15 @@ import (
 type ntfyNotifier struct {
 	httpClient *http.Client
 	hostname   string
-	topic      string
+	topicURL   string
 }
 
 // Returns new Notifier for ntfy.
-func NewNtfyNotifier(client *http.Client, hostname string, topic string) Notifier {
+func NewNtfyNotifier(client *http.Client, hostname string, topicURL string) Notifier {
 	return &ntfyNotifier{
 		httpClient: client,
 		hostname:   hostname,
-		topic:      topic,
+		topicURL:   topicURL,
 	}
 }
 
@@ -34,7 +34,7 @@ func (ntfy *ntfyNotifier) Notify(ctx context.Context, event *session.Event) erro
 	}
 
 	req, err := http.NewRequestWithContext(
-		ctx, http.MethodPost, ntfy.topic, bytes.NewReader([]byte(payload)),
+		ctx, http.MethodPost, ntfy.topicURL, bytes.NewReader([]byte(payload)),
 	)
 	if err != nil {
 		return err
