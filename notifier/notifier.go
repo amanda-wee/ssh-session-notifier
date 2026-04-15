@@ -77,7 +77,7 @@ func send(ctx context.Context, notifier Notifier, db *sql.DB, event *session.Eve
 			retryAfter = maxRetryAfter
 		}
 		if err = sleepWithContext(ctx, time.Duration(retryAfter*float64(time.Second))); err != nil {
-			return errors.Join(err, event.ReleaseLock(context.WithoutCancel(ctx), db))
+			return errors.Join(err, event.ReleaseLock(ctx, db))
 		}
 	}
 	// attempts exhausted, so release the lock:

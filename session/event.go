@@ -114,7 +114,7 @@ func (event *Event) Enqueue(ctx context.Context, db *sql.DB) error {
 // Deletes the record of the session Event from the session event queue database table.
 func (event *Event) DeleteRecord(ctx context.Context, db *sql.DB) error {
 	_, err := db.ExecContext(
-		ctx,
+		context.WithoutCancel(ctx), // delete record even if context has been cancelled
 		`DELETE FROM session_events WHERE id = ?;`,
 		event.ID,
 	)
@@ -124,7 +124,7 @@ func (event *Event) DeleteRecord(ctx context.Context, db *sql.DB) error {
 // Releases the lock in the session events queue database table for the session Event.
 func (event *Event) ReleaseLock(ctx context.Context, db *sql.DB) error {
 	_, err := db.ExecContext(
-		ctx,
+		context.WithoutCancel(ctx), // release lock even if context has been cancelled
 		`UPDATE session_events SET locked_at = NULL WHERE id = ?;`,
 		event.ID,
 	)
