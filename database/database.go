@@ -10,8 +10,18 @@ import (
 
 const DefaultDataSourceName = "/var/lib/ssh-session-notifier/session_events.db"
 
+// Returns a new handle for the database at dataSourceName.
 func NewHandle(dataSourceName string) (*sql.DB, error) {
-	return sql.Open("sqlite3", dataSourceName)
+	db, err := sql.Open("sqlite3", dataSourceName)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = db.Exec("PRAGMA journal_mode=WAL;")
+	if err != nil {
+		return nil, err
+	}
+	return db, nil
 }
 
 var databaseMigrations = [][]string{
@@ -31,6 +41,7 @@ var databaseMigrations = [][]string{
 	},
 }
 
+// Initialises the database given the database handle.
 func Init(ctx context.Context, db *sql.DB) error {
 	_, err := db.ExecContext(
 		ctx,

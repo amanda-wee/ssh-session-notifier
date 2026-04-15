@@ -15,8 +15,19 @@ func TestNewHandle(t *testing.T) {
 	}
 	defer db.Close()
 
+	// Check that the database handle is active:
 	if err = db.Ping(); err != nil {
 		t.Errorf("could not ping temporary test database: %v", err)
+	}
+
+	// Check that the database is in WAL journal mode:
+	var mode string
+	err = db.QueryRow("PRAGMA journal_mode;").Scan(&mode)
+	if err != nil {
+		t.Fatalf("could not query for journal mode: %v", err)
+	}
+	if mode != "wal" {
+		t.Errorf("expected journal mode wal, got: %s", mode)
 	}
 }
 
