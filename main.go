@@ -112,7 +112,7 @@ func send(ctx context.Context, cfg *Config, db *sql.DB) error {
 		)
 	case "ntfy":
 		notificationService = notifier.NewNtfyNotifier(
-			client, cfg.Host.Name, cfg.Notification.Ntfy.TopicURL,
+			client, cfg.Host.Name, cfg.Notification.Ntfy.TopicURL, cfg.Notification.Ntfy.Token,
 		)
 	default:
 		return fmt.Errorf("unsupported notification service: %s", cfg.Notification.Service)

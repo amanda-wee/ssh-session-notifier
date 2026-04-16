@@ -15,14 +15,16 @@ type ntfyNotifier struct {
 	httpClient *http.Client
 	hostname   string
 	topicURL   string
+	token      string
 }
 
 // Returns new Notifier for ntfy.
-func NewNtfyNotifier(client *http.Client, hostname string, topicURL string) Notifier {
+func NewNtfyNotifier(client *http.Client, hostname string, topicURL string, token string) Notifier {
 	return &ntfyNotifier{
 		httpClient: client,
 		hostname:   hostname,
 		topicURL:   topicURL,
+		token:      token,
 	}
 }
 
@@ -42,6 +44,9 @@ func (ntfy *ntfyNotifier) Notify(ctx context.Context, event *session.Event) erro
 	req.Header.Set("Title", ntfy.hostname)
 	req.Header.Set("Priority", "urgent")
 	req.Header.Set("Tags", "rotating_light")
+	if ntfy.token != "" {
+		req.Header.Set("Authorization", "Bearer "+ntfy.token)
+	}
 	resp, err := ntfy.httpClient.Do(req)
 	if err != nil {
 		return err

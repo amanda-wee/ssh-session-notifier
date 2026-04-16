@@ -36,6 +36,7 @@ type DiscordConfig struct {
 
 type NtfyConfig struct {
 	TopicURL string `toml:"topic_url"`
+	Token    string `toml:"token"`
 }
 
 type AllowlistConfig struct {
