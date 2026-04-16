@@ -4,7 +4,7 @@ ssh-session-notifier
 
 Receive notifications when SSH sessions open or close so you can act on an unexpected login.
 
-Notifications do not block or delay logging in and an allowlist keeps expected logins from becoming noise. Supports Discord and ntfy, with a design that makes it easy to add more notification services. Written in Go as a single binary.
+Notifications do not block or delay logging in and an allowlist keeps expected logins from becoming noise. Supports Discord and ntfy, with a design that makes it easy to add more notification services. Written in Go and compiled to a single binary.
 
 Overview
 --------
@@ -56,7 +56,9 @@ The `config.toml` configuration file uses [TOML 1.1](https://toml.io/en/v1.1.0) 
 | notification.discord | webhook_url | (required for Discord) | URL of the Discord webhook
 | notification.ntfy    | topic_url   | (required for ntfy)    | URL of the ntfy topic
 | notification.ntfy    | token       | (optional)             | ntfy access token
-| allowlist            | ips         | (optional)             | Array of IP addresses that are allowed to log in without triggering notifications. CIDR notation is not supported yet.
+| allowlist            | ips         | (optional)             | Array of IP addresses that are allowed to log in without triggering notifications
+
+Note that for the allowlist IP addresses, CIDR notation is not supported yet.
 
 Why use ssh-session-notifier?
 -----------------------------
