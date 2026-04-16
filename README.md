@@ -30,7 +30,8 @@ Then configure a scheduler (cron, systemd timer, etc.) to periodically run `/usr
 
 Configuration
 -------------
-Here is what `config.toml` might look like:
+
+The `config.toml` configuration file uses TOML 1.1 syntax. Here is an example:
 
     [host]
     timezone = "Pacific/Auckland"
@@ -45,8 +46,14 @@ Here is what `config.toml` might look like:
     [allowlist]
     ips = ["10.0.0.2", "10.0.0.3"]
 
-The hostname is for identifying the source of the notification, so use the server's own hostname or a recognisable label.
+### Configuration Variables
 
-Presently, Discord and ntfy are the supported notification services.
-
-IP addresses listed in `allowlist` are allowed to log in without triggering notifications. CIDR notation is not supported yet.
+| Section              | Variable    | Default    | Description
+|----------------------|-------------|------------|------------
+| host                 | timezone    | `Etc/UTC`    | TZ identifier for the host's timezone
+| host                 | name        | (required) | Hostname or a recognisable label for the host
+| notification         | service     | (required) | `discord` or `ntfy`
+| notification.discord | webhook_url | (required) | URL of the Discord webhook
+| notification.ntfy    | topic_url   | (required) | URL of the ntfy topic
+| notification.ntfy    | token       | (optional) | ntfy access token
+| allowlist            | ips         | (optional) | Array of IP addresses that are allowed to log in without triggering notifications. CIDR notation is not supported yet.
