@@ -1,11 +1,11 @@
 package notifier
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/amanda-wee/ssh-session-notifier/session"
 )
@@ -36,7 +36,7 @@ func (ntfy *ntfyNotifier) Notify(ctx context.Context, event *session.Event) erro
 	}
 
 	req, err := http.NewRequestWithContext(
-		ctx, http.MethodPost, ntfy.topicURL, bytes.NewReader([]byte(payload)),
+		ctx, http.MethodPost, ntfy.topicURL, strings.NewReader(payload),
 	)
 	if err != nil {
 		return err
