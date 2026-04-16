@@ -31,7 +31,7 @@ Then configure a scheduler (cron, systemd timer, etc.) to periodically run `/usr
 Configuration
 -------------
 
-The `config.toml` configuration file uses TOML 1.1 syntax. Here is an example:
+The `config.toml` configuration file uses [TOML 1.1](https://toml.io/en/v1.1.0) syntax. Here is an example:
 
     [host]
     timezone = "Pacific/Auckland"
@@ -57,3 +57,24 @@ The `config.toml` configuration file uses TOML 1.1 syntax. Here is an example:
 | notification.ntfy    | topic_url   | (required for ntfy)    | URL of the ntfy topic
 | notification.ntfy    | token       | (optional)             | ntfy access token
 | allowlist            | ips         | (optional)             | Array of IP addresses that are allowed to log in without triggering notifications. CIDR notation is not supported yet.
+
+Why use ssh-session-notifier?
+-----------------------------
+
+### Isn't prevention better than notification of an intrusion?
+
+Yes, but preventative measures can fail due to misconfiguration, leaked credentials, or even a bug. Being warned of a breach soon after it happens can help you to limit the damage and address the underlying issue.
+
+### There are many simpler scripts that also work as PAM hooks to notify about suspicious logins. Why not use them instead?
+
+These scripts typically send the notification synchronously, which makes sense because you want to be notified as soon as possible. The trouble is that these in-band notifications could encounter a notification service that is slow to respond or even down, blocking the login from completing until the service finally responds or the request times out. Furthermore, if the service is temporarily down, the notification might never get sent, even when the service comes back up moments later.
+
+ssh-session-notifier solves these problems by placing the notifications in a queue that can then be processed out-of-band without affecting the login and without the risk that the notification might be lost.
+
+These scripts also tend to be written for a particular notification service, whereas ssh-session-notifier is designed to work with a variety of different notification services through configuration rather than editing code.
+
+### Why not design `ssh-session-notifier queue` to be invoked from `/etc/ssh/sshrc` instead?
+
+* A user's `~/.ssh/rc` script can override `/etc/ssh/sshrc`, bypassing the invocation of `ssh-session-notifier queue`.
+* ssh-session-notifier can be used to determine session length as it notifies on session close too, whereas `/etc/ssh/sshrc` can only inform you of the login event.
+* Being a PAM hook, ssh-session-notifier isn't strictly limited to notifying about SSH sessions. For example, you could configure `/etc/pam.d/login` such that you will be notified about local logins too.
