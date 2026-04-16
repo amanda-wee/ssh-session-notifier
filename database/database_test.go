@@ -71,4 +71,9 @@ func TestInit(t *testing.T) {
 	if rowCount != 0 {
 		t.Errorf("expected session_events row count %d; got %d", 0, rowCount)
 	}
+
+	err = Init(ctx, db)
+	if err != nil {
+		t.Fatalf("could not re-init temporary test database: %v", err)
+	}
 }
