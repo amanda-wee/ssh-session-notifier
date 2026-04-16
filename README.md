@@ -48,12 +48,12 @@ The `config.toml` configuration file uses TOML 1.1 syntax. Here is an example:
 
 ### Configuration Variables
 
-| Section              | Variable    | Default    | Description
-|----------------------|-------------|------------|------------
-| host                 | timezone    | `Etc/UTC`    | TZ identifier for the host's timezone
-| host                 | name        | (required) | Hostname or a recognisable label for the host
-| notification         | service     | (required) | `discord` or `ntfy`
-| notification.discord | webhook_url | (required) | URL of the Discord webhook
-| notification.ntfy    | topic_url   | (required) | URL of the ntfy topic
-| notification.ntfy    | token       | (optional) | ntfy access token
-| allowlist            | ips         | (optional) | Array of IP addresses that are allowed to log in without triggering notifications. CIDR notation is not supported yet.
+| Section              | Variable    | Default Value          | Description
+|----------------------|-------------|------------------------|------------
+| host                 | timezone    | `Etc/UTC`              | TZ identifier for the host's timezone
+| host                 | name        | (required)             | Hostname or a recognisable label for the host
+| notification         | service     | (required)             | `discord` or `ntfy`
+| notification.discord | webhook_url | (required for Discord) | URL of the Discord webhook
+| notification.ntfy    | topic_url   | (required for ntfy)    | URL of the ntfy topic
+| notification.ntfy    | token       | (optional)             | ntfy access token
+| allowlist            | ips         | (optional)             | Array of IP addresses that are allowed to log in without triggering notifications. CIDR notation is not supported yet.
