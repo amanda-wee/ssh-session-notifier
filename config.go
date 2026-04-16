@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/BurntSushi/toml"
@@ -62,12 +63,13 @@ func newConfigFromFile(configFilePath string) (*Config, error) {
 
 	switch cfg.Notification.Service {
 	case "discord":
-		if cfg.Notification.Discord.WebhookURL == "" {
-			return nil, fmt.Errorf("webhook_url must be provided for Discord")
+		if !strings.HasPrefix(cfg.Notification.Discord.WebhookURL, "https://discord.com/api/webhooks/") {
+			return nil, fmt.Errorf("valid webhook_url must be provided for Discord")
 		}
 	case "ntfy":
-		if cfg.Notification.Ntfy.TopicURL == "" {
-			return nil, fmt.Errorf("topic_url must be provided for ntfy")
+		topicURL := cfg.Notification.Ntfy.TopicURL
+		if !strings.HasPrefix(topicURL, "https://") && !strings.HasPrefix(topicURL, "http://") {
+			return nil, fmt.Errorf("valid topic_url must be provided for ntfy")
 		}
 	default:
 		return nil, fmt.Errorf("unsupported notification service: %s", cfg.Notification.Service)

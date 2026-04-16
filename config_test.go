@@ -111,7 +111,22 @@ name = "test-server"
 service = "discord"
 `,
 			wantErr:       true,
-			wantErrSubstr: "webhook_url must be provided for Discord",
+			wantErrSubstr: "valid webhook_url must be provided for Discord",
+		},
+		{
+			name: "discord notification service with bogus webhook_url returns error",
+			content: `
+[host]
+name = "test-server"
+
+[notification]
+service = "discord"
+
+[notification.discord]
+webhook_url = "bogus"
+`,
+			wantErr:       true,
+			wantErrSubstr: "valid webhook_url must be provided for Discord",
 		},
 		{
 			name: "ntfy notification service without topic_url returns error",
@@ -123,7 +138,22 @@ name = "test-server"
 service = "ntfy"
 `,
 			wantErr:       true,
-			wantErrSubstr: "topic_url must be provided for ntfy",
+			wantErrSubstr: "valid topic_url must be provided for ntfy",
+		},
+		{
+			name: "ntfy notification service with bogus topic_url returns error",
+			content: `
+[host]
+name = "test-server"
+
+[notification]
+service = "ntfy"
+
+[notification.ntfy]
+topic_url = "bogus"
+`,
+			wantErr:       true,
+			wantErrSubstr: "valid topic_url must be provided for ntfy",
 		},
 		{
 			name:        "missing file returns error",
