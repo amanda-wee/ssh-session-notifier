@@ -87,6 +87,21 @@ webhook_url = "https://discord.com/api/webhooks/xyz"
 			wantErrSubstr: "unknown time zone Bogus/Timezone",
 		},
 		{
+			name: "missing host name returns error",
+			content: `
+[host]
+timezone = "Etc/UTC"
+
+[notification]
+service = "discord"
+
+[notification.discord]
+webhook_url = "https://discord.com/api/webhooks/xyz"
+`,
+			wantErr:       true,
+			wantErrSubstr: "missing host name",
+		},
+		{
 			name: "unsupported notification service returns error",
 			content: `
 [host]

@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -59,6 +60,10 @@ func newConfigFromFile(configFilePath string) (*Config, error) {
 	_, err = time.LoadLocation(cfg.Host.Timezone)
 	if err != nil {
 		return nil, err
+	}
+
+	if cfg.Host.Name == "" {
+		return nil, errors.New("missing host name")
 	}
 
 	switch cfg.Notification.Service {
