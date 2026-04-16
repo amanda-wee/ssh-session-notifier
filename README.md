@@ -4,7 +4,7 @@ ssh-session-notifier
 
 Receive notifications when SSH sessions open or close so you can act on an unexpected login.
 
-Notifications do not block or delay logging in and an allowlist keeps expected logins from becoming noise. Supports Discord and ntfy notifications, with more to come. Written in Go as a single binary.
+Notifications do not block or delay logging in and an allowlist keeps expected logins from becoming noise. Supports Discord and ntfy, with a design that makes it easy to add more notification services. Written in Go as a single binary.
 
 Overview
 --------
@@ -77,4 +77,4 @@ These scripts also tend to be written for a particular notification service, whe
 
 * A user's `~/.ssh/rc` script can override `/etc/ssh/sshrc`, bypassing the invocation of `ssh-session-notifier queue`.
 * ssh-session-notifier can be used to determine session length as it notifies on session close too, whereas `/etc/ssh/sshrc` can only inform you of the login event.
-* Being a PAM hook, ssh-session-notifier isn't strictly limited to notifying about SSH sessions. For example, you could configure `/etc/pam.d/login` such that you will be notified about local logins too.
+* As a PAM hook, ssh-session-notifier isn't strictly limited to notifying about SSH sessions. For example, you could configure `/etc/pam.d/login` such that you will be notified about local logins too.
