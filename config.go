@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
-	"slices"
+	"time"
 
 	"github.com/BurntSushi/toml"
 )
@@ -55,8 +55,21 @@ func newConfigFromFile(configFilePath string) (*Config, error) {
 	if cfg.Host.Timezone == "" {
 		cfg.Host.Timezone = "Etc/UTC"
 	}
+	_, err = time.LoadLocation(cfg.Host.Timezone)
+	if err != nil {
+		return nil, err
+	}
 
-	if !slices.Contains([]string{"discord", "ntfy"}, cfg.Notification.Service) {
+	switch cfg.Notification.Service {
+	case "discord":
+		if cfg.Notification.Discord.WebhookURL == "" {
+			return nil, fmt.Errorf("webhook_url must be provided for Discord")
+		}
+	case "ntfy":
+		if cfg.Notification.Ntfy.TopicURL == "" {
+			return nil, fmt.Errorf("topic_url must be provided for ntfy")
+		}
+	default:
 		return nil, fmt.Errorf("unsupported notification service: %s", cfg.Notification.Service)
 	}
 

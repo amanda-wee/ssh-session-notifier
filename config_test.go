@@ -60,6 +60,8 @@ name = "test-server"
 
 [notification]
 service = "discord"
+
+[notification.discord]
 webhook_url = "https://discord.com/api/webhooks/xyz"
 `,
 			validate: func(t *testing.T, cfg *Config) {
@@ -69,17 +71,59 @@ webhook_url = "https://discord.com/api/webhooks/xyz"
 			},
 		},
 		{
+			name: "invalid timezone returns error",
+			content: `
+[host]
+timezone = "Bogus/Timezone"
+name = "test-server"
+
+[notification]
+service = "discord"
+
+[notification.discord]
+webhook_url = "https://discord.com/api/webhooks/xyz"
+`,
+			wantErr:       true,
+			wantErrSubstr: "unknown time zone Bogus/Timezone",
+		},
+		{
 			name: "unsupported notification service returns error",
 			content: `
 [host]
 name = "test-server"
 
 [notification]
-service = "slack"
-webhook_url = "https://hooks.slack.com/xyz"
+service = "bogus"
+
+[notification.bogus]
+webhook_url = "https://hooks.bogus.com/xyz"
 `,
 			wantErr:       true,
-			wantErrSubstr: "unsupported notification service: slack",
+			wantErrSubstr: "unsupported notification service: bogus",
+		},
+		{
+			name: "discord notification service without webhook_url returns error",
+			content: `
+[host]
+name = "test-server"
+
+[notification]
+service = "discord"
+`,
+			wantErr:       true,
+			wantErrSubstr: "webhook_url must be provided for Discord",
+		},
+		{
+			name: "ntfy notification service without topic_url returns error",
+			content: `
+[host]
+name = "test-server"
+
+[notification]
+service = "ntfy"
+`,
+			wantErr:       true,
+			wantErrSubstr: "topic_url must be provided for ntfy",
 		},
 		{
 			name:        "missing file returns error",
