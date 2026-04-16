@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"time"
+	_ "time/tzdata" // embed IANA tz database
 
 	"github.com/amanda-wee/ssh-session-notifier/database"
 	"github.com/amanda-wee/ssh-session-notifier/notifier"
