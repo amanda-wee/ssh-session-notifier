@@ -69,9 +69,9 @@ Yes, but preventative measures can fail due to misconfiguration, leaked credenti
 
 ### There are many simpler scripts that also work as PAM hooks to notify about suspicious logins. Why not use them instead?
 
-These scripts typically send the notification synchronously, which makes sense because you want to be notified as soon as possible. The trouble is that these in-band notifications could encounter a notification service that is slow to respond or even down, blocking the login from completing until the service finally responds or the request times out. Furthermore, if the service is temporarily down, the notification might never get sent, even when the service comes back up moments later.
+These scripts typically send the notification synchronously, which makes sense because you want to be notified as soon as possible. The trouble is that these in-band notifications could encounter a notification service that is slow to respond or even down, blocking the login from completing until the service finally responds or the request times out. This can be worked around by sending the notification in a background process, but if the service is down for the duration of the process, the notification might never get sent, even when the service eventually comes back up.
 
-ssh-session-notifier solves these problems by placing the notifications in a queue that can then be processed out-of-band without affecting the login and without the risk that the notification might be lost.
+ssh-session-notifier solves these problems by placing the notifications in a persistent queue that can then be processed out-of-band without affecting the login and without the risk that the notification might be lost.
 
 These scripts also tend to be written for a particular notification service, whereas ssh-session-notifier is designed to work with a variety of different notification services through configuration rather than editing code.
 
