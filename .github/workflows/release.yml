@@ -34,8 +34,7 @@ jobs:
           GOARCH: ${{ matrix.goarch }}
         run: |
           go build -trimpath -ldflags="-s -w" \
-            -o ssh-session-notifier-${{ matrix.goos }}-${{ matrix.goarch }} \
-            ./...
+            -o ssh-session-notifier-${{ matrix.goos }}-${{ matrix.goarch }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7
