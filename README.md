@@ -11,9 +11,9 @@ Overview
 
 `ssh-session-notifier` consists of two subcommands:
 
-`queue` is a PAM hook. It runs at session open and close, reads the PAM environment variables, and writes an event record to a queue in a SQLite database. It is invoked by PAM and runs as root.
+`queue` is a PAM hook. It runs at session open and close, reads the PAM environment variables, and writes an event record to a queue in a SQLite database.
 
-`send` reads pending events from the queue and sends them as webhook notifications. It runs as an unprivileged system user on whatever schedule you configure using cron, a systemd timer, or some other scheduler.
+`send` reads pending events from the queue and sends them as webhook notifications. It runs on whatever schedule you configure using cron, a systemd timer, or some other scheduler.
 
 Installation
 ------------
