@@ -40,7 +40,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: ssh-session-notifier-${{ matrix.goos }}-${{ matrix.goarch }}
-          path: .
+          path: ssh-session-notifier-${{ matrix.goos }}-${{ matrix.goarch }}
 
   release:
     runs-on: ubuntu-latest
@@ -51,10 +51,11 @@ jobs:
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v8
+        with:
+          merge-multiple: true
 
       - name: Generate checksums
-        run: |
-          sha256sum ssh-session-notifier-* > sha256sums.txt
+        run: sha256sum ssh-session-notifier-* > sha256sums.txt
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v3
