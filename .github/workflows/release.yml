@@ -12,10 +12,11 @@ jobs:
     strategy:
       matrix:
         include:
-          - goos: linux
-            goarch: amd64
-          - goos: linux
-            goarch: arm64
+          - goarch: amd64
+          - goarch: arm64
+          - goarch: arm
+            goarm: "7"
+            artifact_arch: armhf
 
     steps:
       - uses: actions/checkout@v6
@@ -30,17 +31,18 @@ jobs:
 
       - name: Build
         env:
-          GOOS: ${{ matrix.goos }}
+          GOOS: linux
           GOARCH: ${{ matrix.goarch }}
+          GOARM: ${{ matrix.goarm }}
         run: |
           go build -trimpath -ldflags="-s -w" \
-            -o ssh-session-notifier-${{ matrix.goos }}-${{ matrix.goarch }}
+            -o ssh-session-notifier-${{ matrix.artifact_arch || matrix.goarch }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
-          name: ssh-session-notifier-${{ matrix.goos }}-${{ matrix.goarch }}
-          path: ssh-session-notifier-${{ matrix.goos }}-${{ matrix.goarch }}
+          name: ssh-session-notifier-${{ matrix.artifact_arch || matrix.goarch }}
+          path: ssh-session-notifier-${{ matrix.artifact_arch || matrix.goarch }}
 
   release:
     runs-on: ubuntu-latest
@@ -62,6 +64,7 @@ jobs:
         with:
           generate_release_notes: true
           files: |
-            ssh-session-notifier-linux-amd64
-            ssh-session-notifier-linux-arm64
+            ssh-session-notifier-amd64
+            ssh-session-notifier-arm64
+            ssh-session-notifier-armhf
             sha256sums.txt
