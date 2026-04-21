@@ -4,7 +4,7 @@ ssh-session-notifier
 
 Receive notifications when SSH sessions open or close so you can act on an unexpected login.
 
-Notifications do not block or delay logging in and an allowlist keeps expected logins from becoming noise. Supports Discord and ntfy, with a design that makes it easy to add more notification services. Written in Go and compiled to a single binary.
+Notifications do not block or delay logging in and an allowlist keeps expected logins from becoming noise. Supports Discord and ntfy, with a design that makes it easy to add more notification services. Written in Go and compiled to a single binary; used by the author on Ubuntu (amd64) and Raspberry Pi OS (arm64 and armhf).
 
 Overview
 --------
