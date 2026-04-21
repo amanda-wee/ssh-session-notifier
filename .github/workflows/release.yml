@@ -62,6 +62,7 @@ jobs:
       - name: Create GitHub release
         uses: softprops/action-gh-release@v3
         with:
+          body_path: CHANGES.md
           generate_release_notes: true
           files: |
             ssh-session-notifier-amd64
