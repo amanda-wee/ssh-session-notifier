@@ -1,1 +1,2 @@
-1. Fix release workflow for reading CHANGES.md
+* Fix release workflow for reading `CHANGES.md`
+* Add `govulncheck` and `staticcheck` to test workflow

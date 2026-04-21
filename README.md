@@ -55,8 +55,8 @@ The `config.toml` configuration file uses [TOML 1.1](https://toml.io/en/v1.1.0) 
 | notification         | service     | (required)             | `discord` or `ntfy`
 | notification.discord | webhook_url | (required for Discord) | URL of the Discord webhook
 | notification.ntfy    | topic_url   | (required for ntfy)    | URL of the ntfy topic
-| notification.ntfy    | token       | (optional)             | ntfy access token
-| allowlist            | ips         | (optional)             | Array of IP addresses that are allowed to log in without triggering notifications
+| notification.ntfy    | token       | `""`                   | ntfy access token
+| allowlist            | ips         | `[]`                   | Array of IP addresses allowed to log in without notifications
 
 Note that for the allowlist IP addresses, CIDR notation is not supported yet.
 
