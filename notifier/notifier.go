@@ -11,9 +11,10 @@ import (
 )
 
 const (
-	maxAttempts   = 5    // maximum number of attempts to send a notification
-	minRetryAfter = 1.0  // minimum time in seconds to wait before retrying
-	maxRetryAfter = 60.0 // maximum time in seconds to wait before retrying
+	maxAttempts         = 5    // maximum number of attempts to send a notification
+	minRetryAfter       = 1.0  // minimum time in seconds to wait before retrying
+	maxRetryAfter       = 60.0 // maximum time in seconds to wait before retrying
+	eventDatetimeFormat = "2006-01-02 15:04:05-07:00"
 )
 
 // Notifier interface defines the methods for sending notifications.

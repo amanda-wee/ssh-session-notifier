@@ -87,7 +87,7 @@ func (discord *discordNotifier) formatPayload(event *session.Event) ([]byte, err
 
 	service := fmt.Sprintf("(%s)", event.Service)
 
-	eventDateTime := event.SessionDatetime.Format("2006-01-02 15:04:05.000000-07:00")
+	eventDateTime := event.SessionDatetime.Format(eventDatetimeFormat)
 
 	var payload struct {
 		Username string `json:"username"`

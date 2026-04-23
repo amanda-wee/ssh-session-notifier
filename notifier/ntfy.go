@@ -89,7 +89,7 @@ func (ntfy *ntfyNotifier) formatPayload(event *session.Event) (string, error) {
 
 	service := fmt.Sprintf("(%s)", event.Service)
 
-	eventDateTime := event.SessionDatetime.Format("2006-01-02 15:04:05.000000-07:00")
+	eventDateTime := event.SessionDatetime.Format(eventDatetimeFormat)
 
 	var content string
 

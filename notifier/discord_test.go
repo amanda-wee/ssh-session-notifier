@@ -187,7 +187,7 @@ func TestDiscordNotifier_FormatPayload(t *testing.T) {
 				Service:         "sshd",
 				SessionDatetime: fixedTime,
 			},
-			wantContent: "```- 'amanda' (192.168.1.50) logged in to myserver via /dev/pts/0 (sshd) at 2024-06-15 09:30:00.000000+00:00```",
+			wantContent: "```- 'amanda' (192.168.1.50) logged in to myserver via /dev/pts/0 (sshd) at 2024-06-15 09:30:00+00:00```",
 		},
 		{
 			name: "close session",
@@ -199,7 +199,7 @@ func TestDiscordNotifier_FormatPayload(t *testing.T) {
 				Service:         "sshd",
 				SessionDatetime: fixedTime,
 			},
-			wantContent: "```- 'amanda' (192.168.1.50) logged out from myserver via /dev/pts/0 (sshd) at 2024-06-15 09:30:00.000000+00:00```",
+			wantContent: "```- 'amanda' (192.168.1.50) logged out from myserver via /dev/pts/0 (sshd) at 2024-06-15 09:30:00+00:00```",
 		},
 		{
 			name: "backticks stripped from user, remoteHost, and terminal",
@@ -211,7 +211,7 @@ func TestDiscordNotifier_FormatPayload(t *testing.T) {
 				Service:         "sshd",
 				SessionDatetime: fixedTime,
 			},
-			wantContent: "```- 'baduser' (evilhost) logged in to myserver via /dev/pts/0 (sshd) at 2024-06-15 09:30:00.000000+00:00```",
+			wantContent: "```- 'baduser' (evilhost) logged in to myserver via /dev/pts/0 (sshd) at 2024-06-15 09:30:00+00:00```",
 		},
 		{
 			name: "empty remoteHost is gracefully skipped",
@@ -223,7 +223,7 @@ func TestDiscordNotifier_FormatPayload(t *testing.T) {
 				Service:         "sshd",
 				SessionDatetime: fixedTime,
 			},
-			wantContent: "```- 'amanda' logged in to myserver via /dev/pts/0 (sshd) at 2024-06-15 09:30:00.000000+00:00```",
+			wantContent: "```- 'amanda' logged in to myserver via /dev/pts/0 (sshd) at 2024-06-15 09:30:00+00:00```",
 		},
 		{
 			name: "empty terminal is gracefully skipped",
@@ -235,7 +235,7 @@ func TestDiscordNotifier_FormatPayload(t *testing.T) {
 				Service:         "login",
 				SessionDatetime: fixedTime,
 			},
-			wantContent: "```- 'amanda' (192.168.1.50) logged in to myserver (login) at 2024-06-15 09:30:00.000000+00:00```",
+			wantContent: "```- 'amanda' (192.168.1.50) logged in to myserver (login) at 2024-06-15 09:30:00+00:00```",
 		},
 		{
 			name: "empty remoteHost and terminal are gracefully skipped",
@@ -247,7 +247,7 @@ func TestDiscordNotifier_FormatPayload(t *testing.T) {
 				Service:         "login",
 				SessionDatetime: fixedTime,
 			},
-			wantContent: "```- 'amanda' logged in to myserver (login) at 2024-06-15 09:30:00.000000+00:00```",
+			wantContent: "```- 'amanda' logged in to myserver (login) at 2024-06-15 09:30:00+00:00```",
 		},
 		{
 			name: "unrecognised event type returns error",
@@ -271,7 +271,7 @@ func TestDiscordNotifier_FormatPayload(t *testing.T) {
 				Service:         "sshd",
 				SessionDatetime: time.Date(2024, 6, 15, 9, 30, 0, 0, time.FixedZone("NZST", 12*60*60)),
 			},
-			wantContent: "```- 'amanda' (192.168.1.50) logged in to myserver via /dev/pts/0 (sshd) at 2024-06-15 09:30:00.000000+12:00```",
+			wantContent: "```- 'amanda' (192.168.1.50) logged in to myserver via /dev/pts/0 (sshd) at 2024-06-15 09:30:00+12:00```",
 		},
 	}
 
