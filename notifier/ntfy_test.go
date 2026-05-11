@@ -133,8 +133,8 @@ func TestNtfyNotifier_Notify(t *testing.T) {
 			err := notifier.Notify(ctx, tt.event)
 
 			if tt.wantRateLimit != nil {
-				var rlErr RateLimitError
-				if !errors.As(err, &rlErr) {
+				rlErr, ok := errors.AsType[RateLimitError](err)
+				if !ok {
 					t.Fatalf("expected RateLimitError, got %v", err)
 				}
 				if rlErr.RetryAfter != tt.wantRateLimit.RetryAfter {
@@ -224,8 +224,8 @@ func TestNtfyNotifier_Notify_AccessToken(t *testing.T) {
 			err := notifier.Notify(ctx, tt.event)
 
 			if tt.wantRateLimit != nil {
-				var rlErr RateLimitError
-				if !errors.As(err, &rlErr) {
+				rlErr, ok := errors.AsType[RateLimitError](err)
+				if !ok {
 					t.Fatalf("expected RateLimitError, got %v", err)
 				}
 				if rlErr.RetryAfter != tt.wantRateLimit.RetryAfter {

@@ -64,8 +64,8 @@ func send(ctx context.Context, notifier Notifier, db *sql.DB, event *session.Eve
 			return event.DeleteRecord(ctx, db)
 		}
 
-		var rateLimitErr RateLimitError
-		if !errors.As(err, &rateLimitErr) {
+		rateLimitErr, ok := errors.AsType[RateLimitError](err)
+		if !ok {
 			// failed notification, so release the lock:
 			return errors.Join(err, event.ReleaseLock(ctx, db))
 		}
