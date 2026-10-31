@@ -1,5 +1,8 @@
-Version 0.1.6 upgrades versions of Go and dependencies.
+Version 0.1.7 upgrades GitHub actions
 
-* Upgrade Go to version 1.27.3
-* Upgrade ncruces/go-sqlite3 to version 0.36.0
-* Upgrade staticcheck to version 2026.2.2
+* Upgrade actions/checkout to v7.0.1
+* Upgrade actions/setup-go to v7.0.0
+* Upgrade govulncheck to v1.9.0
+* Upgrade actions/upload-artifact to v7.0.2
+* Upgrade actions/download-artifact to v8.0.2
+* Upgrade softprops/action-gh-release to v3.0.3
